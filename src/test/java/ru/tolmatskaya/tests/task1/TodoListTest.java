@@ -1,5 +1,6 @@
 package ru.tolmatskaya.tests.task1;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import ru.tolmatskaya.framework.task1.pages.StartPage;
 import ru.tolmatskaya.tests.task1.base.BaseTests;
@@ -7,6 +8,7 @@ import ru.tolmatskaya.tests.task1.base.BaseTests;
 public class TodoListTest extends BaseTests {
 
     @Test
+    @DisplayName("Тестирование списка дел LambdaTest Sample App")
     public void test() {
         pageManager.getStartPage()
                 .titleOnThePage()

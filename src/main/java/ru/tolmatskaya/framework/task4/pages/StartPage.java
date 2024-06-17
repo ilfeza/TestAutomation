@@ -1,5 +1,6 @@
 package ru.tolmatskaya.framework.task4.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -20,17 +21,20 @@ public class StartPage extends BasePage {
     @FindBy(xpath = "//span[text()='Авиа']")
     private WebElement aviaButton;
 
+    @Step("Проверяем, присутсвует ли заголовок на странице")
     public StartPage titleOnThePage() {
         Assert.assertEquals("На странице отсутствует заголовок", "20 миллионов путешественников каждый месяц бронируют у нас отели, билеты и туры", title.getText().trim());
         return pageManager.getStartPage();
     }
 
+    @Step("Вводим в окно 'Куда вы хотите поезать?' '{text}'")
     public StartPage enterTextIntoInputField(String text) {
         inputField.clear();
         inputField.sendKeys(text);
         return pageManager.getStartPage();
     }
 
+    @Step("Вводим дату заезда")
     public StartPage selectDate(String monthName, String dayOfMonth) {
         moscowElement.click();
 
@@ -54,6 +58,8 @@ public class StartPage extends BasePage {
 
         return pageManager.getStartPage();
     }
+
+    @Step("Вводим дату выезда")
     public StartPage selectDepartureDate(String monthName, String dayOfMonth) {
         WebElement monthsList = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.monthsList")));
 
@@ -75,28 +81,13 @@ public class StartPage extends BasePage {
         return pageManager.getStartPage();
     }
 
+    @Step("Кликаем на кнопку найти")
     public HotelPage findHotel(){
         waitUntilElementToBeClickable(findButton).click();
         return pageManager.getHotelPage();
     }
 
-    private int convertMonthNameToNumber(String monthName) {
-        switch (monthName.toLowerCase()) {
-            case "январь": return 1;
-            case "февраль": return 2;
-            case "март": return 3;
-            case "апрель": return 4;
-            case "май": return 5;
-            case "июнь": return 6;
-            case "июль": return 7;
-            case "август": return 8;
-            case "сентябрь": return 9;
-            case "октябрь": return 10;
-            case "ноябрь": return 11;
-            case "декабрь": return 12;
-            default: throw new IllegalArgumentException("Неверное название месяца: " + monthName);
-        }
-    }
+    @Step("Кликаем на страницу авиабилетов")
     public AviaPage clickOnAvia(){
         aviaButton.click();
         return pageManager.getAviaPage();

@@ -1,5 +1,6 @@
 package ru.tolmatskaya.framework.task1.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -25,17 +26,19 @@ public class StartPage extends BasePage {
     private WebElement addButton;
 
 
+    @Step("Проверка присутствия заголовка на странице")
     public StartPage titleOnThePage() {
         Assert.assertEquals("На странице отсутствует заголовок", "LambdaTest Sample App", titleTodoList.getText());
         return pageManager.getStartPage();
     }
 
+    @Step("Проверка присутсвия текста 5 of 5 remaining")
     public StartPage remainingOnThePage() {
         Assert.assertEquals("Отсутствует текст: 5 of 5 remaining", "5 of 5 remaining", numberOfRemaining.getText());
         return pageManager.getStartPage();
     }
 
-    // Элемент списка не зачеркнут
+    @Step("Проверяем, что элемент списка '{itemName}' не зачеркнут")
     public StartPage verifyItemNotDone(String itemName) {
         for (WebElement item : listOfItems) {
             WebElement label = item.findElement(By.tagName("span"));
@@ -48,7 +51,9 @@ public class StartPage extends BasePage {
         return pageManager.getStartPage();
     }
 
+
     // Метод для установки галочки у указанного элемента по его тексту и проверки изменения класса
+    @Step("Ставим галочку на '{itemName}' и проверяем, что класс изменился на done-true")
     public StartPage checkCheckbox(String itemName) {
         for (WebElement item : listOfItems) {
             WebElement label = item.findElement(By.tagName("span"));
@@ -65,6 +70,7 @@ public class StartPage extends BasePage {
         return pageManager.getStartPage();
     }
     // Метод для добавления нового элемента списка
+    @Step("Добавляем новый элемент на страницу")
     public StartPage addNewItem(String itemName) {
         inputAddTodo.sendKeys(itemName);
         addButton.click();

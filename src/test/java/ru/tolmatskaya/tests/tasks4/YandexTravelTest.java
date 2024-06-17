@@ -1,11 +1,13 @@
 package ru.tolmatskaya.tests.tasks4;
 
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import ru.tolmatskaya.tests.tasks4.base.BaseTests;
 
 
 public class YandexTravelTest extends BaseTests {
     @Test
+    @DisplayName("Проверка функциональности поиска отеля")
     public void test1() {
         pageManager.getStartPage()
                 .titleOnThePage()
@@ -17,6 +19,7 @@ public class YandexTravelTest extends BaseTests {
     }
 
     @Test
+    @DisplayName("Проверка фильтрации отелей")
     public void test2() {
         pageManager.getStartPage()
                 .titleOnThePage()
@@ -32,6 +35,7 @@ public class YandexTravelTest extends BaseTests {
     }
 
     @Test
+    @DisplayName("Тестирование поиска и выбора авиабилета”")
     public void test3() {
         pageManager.getStartPage()
                 .titleOnThePage()

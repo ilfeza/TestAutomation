@@ -1,5 +1,6 @@
 package ru.tolmatskaya.framework.task4.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -36,17 +37,20 @@ public class HotelPage extends BasePage{
     private WebElement maxPriceInput;
 
 
+    @Step("Проверяем наличие заголовка на странице")
     public HotelPage titleOnThePage() {
         assertEquals("Страница поиска отеля не открылась", "Популярные", title.getText().trim());
         return pageManager.getHotelPage();
     }
 
+    @Step("Кликаем на кнопку фильтров")
     public HotelPage addFilters(){
         waitUntilElementToBeClickable(allFilters);
         allFilters.click();
         return pageManager.getHotelPage();
     }
 
+    @Step("Выбираем тип питания - '{foodType}'")
     public HotelPage selectFoodOption(String foodType) {
         for (WebElement option : foodOptions) {
             WebElement label = option.findElement(By.cssSelector(".aj7Gb"));
@@ -57,6 +61,8 @@ public class HotelPage extends BasePage{
         }
         return this;
     }
+
+    @Step("Выбираем тип размещения - '{accommodationType}'")
     public HotelPage selectAccommodationType(String accommodationType) {
         for (WebElement option : accommodationOptions) {
             WebElement label = option.findElement(By.cssSelector(".aj7Gb"));
@@ -67,6 +73,8 @@ public class HotelPage extends BasePage{
         }
         return this;
     }
+
+    @Step("Устанавливаем диапазон цен от '{minPrice}' до '{maxPrice}'")
     public HotelPage setPriceRange(int minPrice, int maxPrice) {
         minPriceInput.clear();
         minPriceInput.sendKeys(String.valueOf(minPrice));

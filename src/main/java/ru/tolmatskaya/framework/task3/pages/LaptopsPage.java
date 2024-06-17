@@ -1,5 +1,6 @@
 package ru.tolmatskaya.framework.task3.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,11 +31,14 @@ public class LaptopsPage extends BasePage{
     @FindBy(xpath = "//input[@id='range-filter-field-glprice_1ae4385e_min']")
     private WebElement priceInputField;
 
+    @Step("Проверяем, открылась ли страница с ноутбуками")
     public LaptopsPage checkLaptopsPage() {
         Assert.assertEquals("Страница ноутбуки не открылась", "Ноутбуки", title.getText());
         //printAltAttributes(nameLaptops);
         return pageManager.getLaptopsPage();
     }
+
+    @Step("Выводим в лог первые 5 ноутбуков и их цены")
     public LaptopsPage logProducts() {
         for (int i = 0; i < 5 && i < productList.size(); i++) {
             WebElement product = productList.get(i);
@@ -51,7 +55,7 @@ public class LaptopsPage extends BasePage{
         return this;
     }
 
-
+    @Step("Вводим стоимость ноутбука")
     public LaptopsPage enterPrice(String price) {
         //moveToElement(priceInputField);
        // Очистить поле ввода, если там уже есть значение

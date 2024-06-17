@@ -1,5 +1,6 @@
 package ru.tolmatskaya.framework.task3.pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -23,17 +24,20 @@ public class StartPage extends BasePage {
     @FindBy(xpath = "//a[text()='Ноутбуки']")
     private WebElement notebooksLink;
 
+    @Step("Проверяем присутствие заголовка на странице")
     public StartPage checkMainPage() {
         assertEquals("Главная страница не открылась", "https://market.yandex.ru/", urlPage.getAttribute("content"));
         return pageManager.getStartPage();
     }
 
+    @Step("Кликаем на каталог")
     public StartPage clickOnCatalog() {
         WebElement catalogButton = wait.until(ExpectedConditions.elementToBeClickable(catalog));
         catalogButton.click();
         return pageManager.getStartPage();
     }
 
+    @Step("Кликаем на страницу с ноуутбуками")
     public LaptopsPage clickOnCatalogAndNavigateToNotebooks() {
         WebElement electronics = wait.until(ExpectedConditions.visibilityOf(electronicsMenu));
         assertEquals("Меню не открылось", "Электроника", electronics.getText());
