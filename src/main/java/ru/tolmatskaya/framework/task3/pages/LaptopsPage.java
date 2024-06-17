@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LaptopsPage extends BasePage{
     @FindBy(xpath = "//h1")
@@ -22,14 +23,15 @@ public class LaptopsPage extends BasePage{
     @FindBy(xpath = "//div[@data-auto-themename='listDetailed']")
     private List<WebElement> productList;
 
-    @FindBy(xpath = "//div[@data-filter-value-id='resale_resale']//label")
-    private WebElement resaleFilter;
 
     @FindBy(xpath = "//h2[text()='Популярные предложения']")
     private WebElement titleResale;
 
-    @FindBy(xpath = "//input[@id='range-filter-field-glprice_1ae4385e_min']")
+    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ от')]/following-sibling::div//input[@type='text']")
     private WebElement priceInputField;
+
+    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ до')]/following-sibling::div//input[@type='text']")
+    private WebElement maxPriceInputField;
 
     @Step("Проверяем, открылась ли страница с ноутбуками")
     public LaptopsPage checkLaptopsPage() {
@@ -54,14 +56,55 @@ public class LaptopsPage extends BasePage{
         }
         return this;
     }
+    /*
 
-    @Step("Вводим стоимость ноутбука")
+    @Step("Вводим минимальную стоимость ноутбука")
     public LaptopsPage enterPrice(String price) {
         //moveToElement(priceInputField);
        // Очистить поле ввода, если там уже есть значение
         priceInputField.sendKeys(price); // Ввести новое значение
         return this;
     }
+
+     */
+/*
+    @Step("Вводим максимальную стоимость ноутбука")
+    public LaptopsPage enterMaxPrice(String price) {
+        //moveToElement(priceInputField);
+        // Очистить поле ввода, если там уже есть значение
+        maxPriceInputField.sendKeys(price); // Ввести новое значение
+        return this;
+    }
+
+ */
+
+    @Step("Проверяем, что цены первых 5 ноутбуков в диапазоне minPrice и maxPrice")
+    public LaptopsPage inputPrice(double minPrice, double maxPrice) {
+        priceInputField.sendKeys(Double.toString(minPrice));
+        maxPriceInputField.sendKeys(Double.toString(maxPrice));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        for (int i = 0; i < 5 && i < productList.size(); i++) {
+
+            WebElement product = productList.get(i);
+
+            waitUntilElementToBeVisible(product);
+            moveToElement(product);
+
+            String priceText = product.findElement(By.xpath(".//span[@data-auto='snippet-price-current']/span[1]")).getText();
+            double price = Double.parseDouble(priceText.replaceAll("[^\\d,]", "").replace(",", "."));
+
+            double tolerance = 0.01;
+
+            assertTrue("Цена " + price + " находится вне диапазона " + minPrice + " - " + maxPrice,
+                    price >= minPrice && price <= maxPrice);
+        }
+        return this;
+    }
+
 
 
 

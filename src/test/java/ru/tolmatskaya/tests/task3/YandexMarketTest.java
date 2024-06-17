@@ -15,7 +15,7 @@ public class YandexMarketTest extends BaseTests {
                 .clickOnCatalog()
                 .clickOnCatalogAndNavigateToNotebooks()
                 .checkLaptopsPage()
-                //.logProducts()
-                .enterPrice("200");
+                .logProducts()
+                .inputPrice(60000, 110000);
     }
 }
