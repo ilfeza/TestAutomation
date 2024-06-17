@@ -23,6 +23,7 @@
         <!-- Dependencies version -->
         <junit.version>4.13.2</junit.version>
         <selenium-java.version>4.20.0</selenium-java.version>
+
     </properties>
 
     <dependencies>
