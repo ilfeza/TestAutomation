@@ -7,10 +7,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class StartPage extends BasePage {
-    //private static final Logger logger = Logger.getLogger(String.valueOf(StartPage.class));
+    private static final Logger logger = Logger.getLogger(StartPage.class);
 
     @FindBy(xpath = "//h2[contains(text(), 'LambdaTest Sample App')]")
     private WebElement titleTodoList;
@@ -30,14 +30,16 @@ public class StartPage extends BasePage {
 
     @Step("Проверка присутствия заголовка на странице")
     public StartPage titleOnThePage() {
+        //logger.info("This is a debug message");
         Assert.assertEquals("На странице отсутствует заголовок", "LambdaTest Sample App", titleTodoList.getText());
-        //logger.info("Нужный заголовок присутствует на странице");
+        logger.info("Нужный заголовок присутствует на странице");
         return pageManager.getStartPage();
     }
 
     @Step("Проверка присутсвия текста 5 of 5 remaining")
     public StartPage remainingOnThePage() {
         Assert.assertEquals("Отсутствует текст: 5 of 5 remaining", "5 of 5 remaining", numberOfRemaining.getText());
+        logger.info("На странице присутсвует текст 5 of 5 remaining");
         return pageManager.getStartPage();
     }
 
@@ -50,6 +52,7 @@ public class StartPage extends BasePage {
                 return pageManager.getStartPage();
             }
         }
+        logger.info("Элемент списка зачеркнут");
         Assert.fail("Элемент списка с текстом " + itemName + " не найден на странице");
         return pageManager.getStartPage();
     }
@@ -69,6 +72,7 @@ public class StartPage extends BasePage {
                 return pageManager.getStartPage();
             }
         }
+        logger.info("Чекбкс не найден на странице");
         Assert.fail("Чекбокс с текстом " + itemName + " не найден на странице");
         return pageManager.getStartPage();
     }
@@ -77,6 +81,7 @@ public class StartPage extends BasePage {
     public StartPage addNewItem(String itemName) {
         inputAddTodo.sendKeys(itemName);
         addButton.click();
+        logger.info("Новый элемент добавлен на страницу");
         return pageManager.getStartPage();
     }
 }

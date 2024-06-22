@@ -1,10 +1,12 @@
 package ru.tolmatskaya.framework.task3.pages;
 
 import io.qameta.allure.Step;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import ru.tolmatskaya.framework.task1.pages.StartPage;
 
 import javax.lang.model.element.Element;
 import javax.swing.text.Document;
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LaptopsPage extends BasePage{
+    private static final Logger logger = Logger.getLogger(LaptopsPage.class);
     @FindBy(xpath = "//h1")
     private WebElement title;
 
@@ -27,10 +30,10 @@ public class LaptopsPage extends BasePage{
     @FindBy(xpath = "//h2[text()='Популярные предложения']")
     private WebElement titleResale;
 
-    @FindBy(xpath = "//input[@data-qa='control' and @min='0' and @max='60000' and @value='0 ₽']")
+    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ от')]/following-sibling::div//input[@type='text']")
     private WebElement priceInputField;
 
-    @FindBy(xpath = "//input[@data-qa='control' and @min='Infinity' and @max='60000' and @value='60 000+ ₽']")
+    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ до')]/following-sibling::div//input[@type='text']")
     private WebElement maxPriceInputField;
 
     @Step("Проверяем, открылась ли страница с ноутбуками")
@@ -51,8 +54,9 @@ public class LaptopsPage extends BasePage{
             List<WebElement> discountElements = product.findElements(By.xpath(".//div[@data-auto='resale-badge']/span"));
             boolean isDiscount = !discountElements.isEmpty();
 
-            System.out.println(title);
-            System.out.println(price);
+            //System.out.println(title);
+            //System.out.println(price);
+            logger.info("Название товара: "+title+" Цена: "+price);
         }
         return this;
     }
@@ -61,8 +65,7 @@ public class LaptopsPage extends BasePage{
     @Step("Вводим минимальную стоимость ноутбука")
     public LaptopsPage enterPrice(String price) {
         //moveToElement(priceInputField);
-       // Очистить поле ввода, если там уже есть значение
-        priceInputField.sendKeys(price); // Ввести новое значение
+        priceInputField.sendKeys(price);
         return this;
     }
 
@@ -71,8 +74,7 @@ public class LaptopsPage extends BasePage{
     @Step("Вводим максимальную стоимость ноутбука")
     public LaptopsPage enterMaxPrice(String price) {
         //moveToElement(priceInputField);
-        // Очистить поле ввода, если там уже есть значение
-        maxPriceInputField.sendKeys(price); // Ввести новое значение
+        maxPriceInputField.sendKeys(price);
         return this;
     }
 
@@ -102,10 +104,8 @@ public class LaptopsPage extends BasePage{
             assertTrue("Цена " + price + " находится вне диапазона " + minPrice + " - " + maxPrice,
                     price >= minPrice && price <= maxPrice);
         }
+        logger.info("Цены первых 5 ноутбуков находятся в заданном диапазоне");
         return this;
     }
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package ru.tolmatskaya.framework.task5.pages;
 
 import io.qameta.allure.Step;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class StartPage extends BasePage {
     private static final TestPropManager props = TestPropManager.getInstance();
+    private static final Logger logger = Logger.getLogger(StartPage.class);
 
     @FindBy(xpath = "//h2[contains(text(), 'Test your front-end against a real API')]")
     private WebElement title;
@@ -66,7 +68,7 @@ public class StartPage extends BasePage {
                         break;
                 }
                 Assert.assertEquals("Ссылка не совпадает",request.getAttribute("href"), "https://reqres.in" + urlRequest.getText());
-
+                logger.info("Проверка ответа '" + nameButton + "' на соответствии с API");
                 return this;
             }
         }
@@ -77,6 +79,7 @@ public class StartPage extends BasePage {
     @Step("Проверяем, присутсвует ли заголовок на странице")
     public StartPage checkOpenPage() {
         checkOpenPage("Test your front-end against a real API", title);
+        logger.info("Нужный заголовок присутствует на странице");
         return this;
     }
 }

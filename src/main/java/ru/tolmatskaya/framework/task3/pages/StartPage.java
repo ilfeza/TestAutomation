@@ -1,6 +1,7 @@
 package ru.tolmatskaya.framework.task3.pages;
 
 import io.qameta.allure.Step;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import static org.junit.Assert.assertEquals;
 
 public class StartPage extends BasePage {
+    private static final Logger logger = Logger.getLogger(StartPage.class);
     @FindBy(xpath = "//meta[@property='og:url']")
     private WebElement urlPage;
 
@@ -27,6 +29,7 @@ public class StartPage extends BasePage {
     @Step("Проверяем присутствие заголовка на странице")
     public StartPage checkMainPage() {
         assertEquals("Главная страница не открылась", "https://market.yandex.ru/", urlPage.getAttribute("content"));
+        logger.info("Нужный заголовок присутсвует на странице");
         return pageManager.getStartPage();
     }
 
@@ -34,10 +37,11 @@ public class StartPage extends BasePage {
     public StartPage clickOnCatalog() {
         WebElement catalogButton = wait.until(ExpectedConditions.elementToBeClickable(catalog));
         catalogButton.click();
+        logger.info("Открылся каталог");
         return pageManager.getStartPage();
     }
 
-    @Step("Кликаем на страницу с ноуутбуками")
+    @Step("Кликаем на страницу с ноутбуками")
     public LaptopsPage clickOnCatalogAndNavigateToNotebooks() {
         WebElement electronics = wait.until(ExpectedConditions.visibilityOf(electronicsMenu));
         assertEquals("Меню не открылось", "Электроника", electronics.getText());
@@ -51,6 +55,7 @@ public class StartPage extends BasePage {
         WebElement notebooks = wait.until(ExpectedConditions.visibilityOf(notebooksLink));
         assertEquals("Отсутсвет ссылка на ноутбуки", "Ноутбуки", notebooks.getText());
         notebooks.click();
+        logger.info("Переход на страницу с ноутбуками");
 
         return pageManager.getLaptopsPage();
     }

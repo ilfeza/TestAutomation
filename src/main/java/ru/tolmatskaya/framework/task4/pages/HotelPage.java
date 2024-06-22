@@ -1,6 +1,7 @@
 package ru.tolmatskaya.framework.task4.pages;
 
 import io.qameta.allure.Step;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -13,19 +14,14 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class HotelPage extends BasePage{
+    private static final Logger logger = Logger.getLogger(HotelPage.class);
     @FindBy(xpath = "//div[text()='Популярные']")
     private WebElement title;
     @FindBy(xpath = "//button[contains(., 'Все фильтры')]")
     private WebElement allFilters;
-    @FindBy(xpath = "//label[contains(@class, 'BS5dT')]")
+    @FindBy(xpath = "//h2[text()='Питание']/following-sibling::div/label")
     private List<WebElement> foodOptions;
-
-    @FindBy(xpath = "//label[contains(@class, 'BS5dT')]")
-    private List<WebElement> accommodationOptions;
-
-    @FindBy(xpath = "//div[@class='EhCXF U5HI4 _274Q5 FhpbT']//input[@data-qa='control']")
-    private List<WebElement> priceInputs;
-    @FindBy(xpath = "//button[contains(., 'Искать цены в')]")
+    @FindBy(xpath = "//button[contains(span/span, 'Искать цены')]")
     private WebElement searchButton;
 
     @FindBy(xpath = "//span[@data-qa='price']")
@@ -41,6 +37,7 @@ public class HotelPage extends BasePage{
     @Step("Проверяем наличие заголовка на странице")
     public HotelPage titleOnThePage() {
         assertEquals("Страница поиска отеля не открылась", "Популярные", title.getText().trim());
+        logger.info("Нужный заголовок находится на странице");
         return pageManager.getHotelPage();
     }
 
@@ -48,30 +45,36 @@ public class HotelPage extends BasePage{
     public HotelPage addFilters(){
         waitUntilElementToBeClickable(allFilters);
         allFilters.click();
+        logger.info("Выбраны фильтрация");
         return pageManager.getHotelPage();
     }
 
     @Step("Выбираем тип питания - '{foodType}'")
     public HotelPage selectFoodOption(String foodType) {
-        for (WebElement option : foodOptions) {
-            WebElement label = option.findElement(By.cssSelector(".aj7Gb"));
-            if (label.getText().contains(foodType)) {
-                option.click();
-                break;
-            }
-        }
+        String xpath = "//h2[text()='Питание']/following-sibling::div//label[.//div[text()='" + foodType + "']]";
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+
+        boolean elementExists = element.isDisplayed();
+        Assert.assertTrue("Элемент с текстом '" + foodType + "' не найден на странице или не отображается", elementExists);
+        String food = "//div[contains(text(), '" + foodType + "')]";
+        WebElement elementFood = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(food)));
+        elementFood.click();
+        logger.info("Выбран тип питания");
         return this;
     }
 
     @Step("Выбираем тип размещения - '{accommodationType}'")
     public HotelPage selectAccommodationType(String accommodationType) {
-        for (WebElement option : accommodationOptions) {
-            WebElement label = option.findElement(By.cssSelector(".aj7Gb"));
-            if (label.getText().contains(accommodationType)) {
-                option.click();
-                break;
-            }
-        }
+        String xpath = "//h2[text()='Тип размещения']/following-sibling::div//label[.//div[text()='" + accommodationType + "']]";
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+
+        boolean elementExists = element.isDisplayed();
+        Assert.assertTrue("Элемент с текстом '" + accommodationType + "' не найден на странице или не отображается", elementExists);
+        String accomadation = "//div[contains(text(), '" + accommodationType + "')]";
+        WebElement elementFood = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(accomadation)));
+        elementFood.click();
+        logger.info("Выбран тип размещения");
+
         return this;
     }
 
@@ -80,56 +83,38 @@ public class HotelPage extends BasePage{
     public HotelPage setPriceRange(int minPrice, int maxPrice) {
         minPriceInput.clear();
         minPriceInput.sendKeys(String.valueOf(minPrice));
-
-        // Очищаем и вводим значения для максимальной цены
         String currentValue = maxPriceInput.getAttribute("value");
-
-// Отмечаем весь текст в поле ввода
         maxPriceInput.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-
-// Удаляем выделенный текст
         maxPriceInput.sendKeys(Keys.DELETE);
         maxPriceInput.sendKeys(String.valueOf(maxPrice));
         maxPriceInput.sendKeys(Keys.ENTER);
-
-// Вставляем новое значение
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        waitUntilElementToBeClickable(searchButton);
 
-        // Нажимаем кнопку поиска
-        waitUntilElementToBeVisible(searchButton);
         searchButton.click();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        // Проверяем цены на отелях
         for (WebElement priceElement : allHotels) {
             String priceText = priceElement.getText().trim();
-
-            // Пропускаем элементы, у которых текст пустой
             if (priceText.isEmpty()) {
                 continue;
             }
-
-            // Извлекаем числовое значение цены
             String cleanPriceText = priceText.replaceAll("[^0-9]", "");
-
-            // Проверяем, что цена не превышает максимальное значение
             if (!cleanPriceText.isEmpty()) {
                 int priceValue = Integer.parseInt(cleanPriceText);
+                System.out.println(priceValue);
                 Assert.assertTrue("Цена не должна быть больше " + maxPrice, priceValue <= maxPrice);
             }
         }
 
         return this;
     }
-
-
 
 }

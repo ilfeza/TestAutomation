@@ -2,6 +2,7 @@
 target
 .idea
 .allure
+.logs
 
 # Files ignore
 *.iml

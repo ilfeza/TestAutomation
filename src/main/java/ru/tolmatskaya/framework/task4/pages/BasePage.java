@@ -43,6 +43,16 @@ public class BasePage {
         action.moveToElement(element).build().perform();
     }
 
+    protected void moveToNewTab() {
+        for (String tab : driverManager.getDriver().getWindowHandles()) {
+            driverManager.getDriver().switchTo().window(tab);
+        }
+    }
+
+    protected String getTab(){
+        return driverManager.getDriver().getWindowHandle();
+    }
+
     protected int convertMonthNameToNumber(String monthName) {
         switch (monthName.toLowerCase()) {
             case "январь": return 1;
@@ -60,4 +70,6 @@ public class BasePage {
             default: throw new IllegalArgumentException("Неверное название месяца: " + monthName);
         }
     }
+
+
 }

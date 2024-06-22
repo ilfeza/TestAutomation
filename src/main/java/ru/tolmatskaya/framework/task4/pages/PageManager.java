@@ -5,6 +5,7 @@ public class PageManager {
     private StartPage startPage;
     private HotelPage hotelPage;
     private AviaPage aviaPage;
+    private SearchAviaPage searchAviaPage;
 
     private PageManager(){
 
@@ -35,5 +36,12 @@ public class PageManager {
             aviaPage = new AviaPage();
         }
         return aviaPage;
+    }
+
+    public SearchAviaPage getSearchAviaPage(){
+        if (searchAviaPage == null){
+            searchAviaPage = new SearchAviaPage();
+        }
+        return searchAviaPage;
     }
 }

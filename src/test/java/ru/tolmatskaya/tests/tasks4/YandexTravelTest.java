@@ -43,7 +43,10 @@ public class YandexTravelTest extends BaseTests {
                 .titleOnThePage()
                 .fromInput("Москва")
                 .toInput("Санкт-Петербург")
-                .selectDate("Июль", "1");
+                .selectDate("Июль", "1")
+                .findAvia()
+                .findAvia()
+                .buyAvia();
     }
 
 
