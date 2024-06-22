@@ -4,6 +4,7 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import ru.tolmatskaya.task5.data.*;
+import io.restassured.module.jsv.JsonSchemaValidator;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ApiTests{
                 .get("https://reqres.in/api/users?page=2")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserListSchema.json"))
                 .body("page", equalTo(2))
                 .body("per_page", equalTo(6))
                 .body("total", equalTo(12))
@@ -45,6 +47,7 @@ public class ApiTests{
                 .get("https://reqres.in/api/users/2")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserSingleSchema.json"))
                 //.log().all()
                 .extract().jsonPath().getObject("data", UserData.class);
         assertThat(user.getId()).isEqualTo(2);
@@ -73,6 +76,7 @@ public class ApiTests{
                 .get("https://reqres.in/api/unknown")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("ResourseListSchema.json"))
                 .body("page", equalTo(1))
                 .body("per_page", equalTo(6))
                 .body("total", equalTo(12))
@@ -93,6 +97,7 @@ public class ApiTests{
                 .get("https://reqres.in/api/unknown/2")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("ResourseSingleSchema.json"))
                 //.log().all()
                 .extract().jsonPath().getObject("data", ResourseData.class);
         assertThat(resourse).extracting(ResourseData::getId).isEqualTo(2);
@@ -129,6 +134,7 @@ public class ApiTests{
                 .post("https://reqres.in/api/users")
                 .then()
                 .statusCode(201)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("CreateUserResponseSchema.json"))
                 //.log().all()
                 .extract().as(UserResponse.class);
 
@@ -153,6 +159,7 @@ public class ApiTests{
                 .put("https://reqres.in/api/users/2")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UpdateUserResponseSchema.json"))
                 //.log().all()
                 .extract().as(UserResponse.class);
 
@@ -176,6 +183,7 @@ public class ApiTests{
                 .patch("https://reqres.in/api/users/2")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UpdateUserResponseSchema.json"))
                 //.log().all()
                 .extract().as(UserResponse.class);
 
@@ -211,6 +219,7 @@ public class ApiTests{
                 .post("https://reqres.in/api/register")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("RegisterSuccessfulResponseSchema.json"))
                 //.log().all()
                 .extract().as(LoginRegisterResponse.class);
 
@@ -232,7 +241,8 @@ public class ApiTests{
                 .when()
                 .post("https://reqres.in/api/register")
                 .then()
-                .statusCode(400) // Ожидаемый статус код 400 - Bad Request
+                .statusCode(400)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("RegisterLoginUnsuccessfulResponseSchema.json"))
                 //.log().all()
                 .extract().as(LoginRegisterResponse.class);
 
@@ -255,6 +265,7 @@ public class ApiTests{
                 .post("https://reqres.in/api/login")
                 .then()
                 .statusCode(200)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("LoginSuccessfulResponseSchema.json"))
                 //.log().all()
                 .extract().as(LoginRegisterResponse.class);
 
@@ -276,6 +287,7 @@ public class ApiTests{
                 .post("https://reqres.in/api/login")
                 .then()
                 .statusCode(400)
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("RegisterLoginUnsuccessfulResponseSchema.json"))
                 //.log().all()
                 .extract().as(LoginRegisterResponse.class);
 
@@ -292,6 +304,7 @@ public class ApiTests{
                 .then()
                 .statusCode(200)
                 .time(greaterThan(3000L)).and().time(lessThan(6000L))
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("UserListSchema.json"))
                 .body("page", equalTo(1))
                 .body("per_page", equalTo(6))
                 .body("total", equalTo(12))
