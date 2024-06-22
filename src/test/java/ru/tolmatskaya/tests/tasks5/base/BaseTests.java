@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 import ru.tolmatskaya.framework.managers.DriverManager;
 import ru.tolmatskaya.framework.managers.InitManager;
 
-public class BaseTest {
+public class BaseTests {
     private static final DriverManager driverManager = DriverManager.getInstance();
 
     @BeforeClass
