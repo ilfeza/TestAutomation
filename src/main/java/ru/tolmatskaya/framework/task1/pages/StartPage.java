@@ -7,8 +7,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class StartPage extends BasePage {
+    //private static final Logger logger = Logger.getLogger(String.valueOf(StartPage.class));
 
     @FindBy(xpath = "//h2[contains(text(), 'LambdaTest Sample App')]")
     private WebElement titleTodoList;
@@ -29,6 +31,7 @@ public class StartPage extends BasePage {
     @Step("Проверка присутствия заголовка на странице")
     public StartPage titleOnThePage() {
         Assert.assertEquals("На странице отсутствует заголовок", "LambdaTest Sample App", titleTodoList.getText());
+        //logger.info("Нужный заголовок присутствует на странице");
         return pageManager.getStartPage();
     }
 

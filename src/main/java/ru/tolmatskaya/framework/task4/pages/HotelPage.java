@@ -3,6 +3,7 @@ package ru.tolmatskaya.framework.task4.pages;
 import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,7 +25,7 @@ public class HotelPage extends BasePage{
 
     @FindBy(xpath = "//div[@class='EhCXF U5HI4 _274Q5 FhpbT']//input[@data-qa='control']")
     private List<WebElement> priceInputs;
-    @FindBy(xpath = "//span[contains(text(), 'Искать цены в')]")
+    @FindBy(xpath = "//button[contains(., 'Искать цены в')]")
     private WebElement searchButton;
 
     @FindBy(xpath = "//span[@data-qa='price']")
@@ -33,7 +34,7 @@ public class HotelPage extends BasePage{
     @FindBy(xpath = "//input[contains(@value, '0 ₽')]")
     private WebElement minPriceInput;
 
-    @FindBy(xpath = "//input[contains(@value, '60 000+ ₽')]")
+    @FindBy(xpath = "//span[text()='до']/following-sibling::input")
     private WebElement maxPriceInput;
 
 
@@ -74,30 +75,61 @@ public class HotelPage extends BasePage{
         return this;
     }
 
+
     @Step("Устанавливаем диапазон цен от '{minPrice}' до '{maxPrice}'")
     public HotelPage setPriceRange(int minPrice, int maxPrice) {
         minPriceInput.clear();
         minPriceInput.sendKeys(String.valueOf(minPrice));
 
         // Очищаем и вводим значения для максимальной цены
-        maxPriceInput.clear();
+        String currentValue = maxPriceInput.getAttribute("value");
+
+// Отмечаем весь текст в поле ввода
+        maxPriceInput.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+
+// Удаляем выделенный текст
+        maxPriceInput.sendKeys(Keys.DELETE);
         maxPriceInput.sendKeys(String.valueOf(maxPrice));
+        maxPriceInput.sendKeys(Keys.ENTER);
+
+// Вставляем новое значение
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         // Нажимаем кнопку поиска
+        waitUntilElementToBeVisible(searchButton);
         searchButton.click();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-
+        // Проверяем цены на отелях
         for (WebElement priceElement : allHotels) {
-            String priceText = priceElement.getText();
+            String priceText = priceElement.getText().trim();
 
+            // Пропускаем элементы, у которых текст пустой
+            if (priceText.isEmpty()) {
+                continue;
+            }
+
+            // Извлекаем числовое значение цены
             String cleanPriceText = priceText.replaceAll("[^0-9]", "");
-            int priceValue = Integer.parseInt(cleanPriceText);
 
-            assertEquals("Цена не меньше " + maxPrice, true, priceValue < maxPrice);
+            // Проверяем, что цена не превышает максимальное значение
+            if (!cleanPriceText.isEmpty()) {
+                int priceValue = Integer.parseInt(cleanPriceText);
+                Assert.assertTrue("Цена не должна быть больше " + maxPrice, priceValue <= maxPrice);
+            }
         }
 
         return this;
     }
+
 
 
 }

@@ -24,6 +24,9 @@ public class AviaPage extends BasePage {
     @FindBy(xpath = "//div[@class='GxV0a' and text()='Москва']")
     private WebElement moscowElement;
 
+    @FindBy(xpath = "//div[@data-qa='labelPlaceholder' and text()='Туда']")
+    private WebElement toButton;
+
     @Step("Проверяем присутсвие заголовка на странице")
     public AviaPage titleOnThePage() {
         Assert.assertEquals("На странице отсутствует заголовок",
@@ -53,9 +56,8 @@ public class AviaPage extends BasePage {
     @Step("Заполняем дату перелета '{monthName}' '{dayOfMonth}'")
     public StartPage selectDate(String monthName, String dayOfMonth) {
         sElement.click();
-        WebElement labelPlaceholder = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("label[data-qa='labelPlaceholder']")
-        ));
+        WebElement labelPlaceholder = toButton;
+
         labelPlaceholder.click();
 
         String monthXPath = "//div[@data-qa='controlPlaceholder' and text()='" + monthName + "']";

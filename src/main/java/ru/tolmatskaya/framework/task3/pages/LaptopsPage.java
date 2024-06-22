@@ -27,10 +27,10 @@ public class LaptopsPage extends BasePage{
     @FindBy(xpath = "//h2[text()='Популярные предложения']")
     private WebElement titleResale;
 
-    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ от')]/following-sibling::div//input[@type='text']")
+    @FindBy(xpath = "//input[@data-qa='control' and @min='0' and @max='60000' and @value='0 ₽']")
     private WebElement priceInputField;
 
-    @FindBy(xpath = "//label[contains(text(), 'Цена, ₽ до')]/following-sibling::div//input[@type='text']")
+    @FindBy(xpath = "//input[@data-qa='control' and @min='Infinity' and @max='60000' and @value='60 000+ ₽']")
     private WebElement maxPriceInputField;
 
     @Step("Проверяем, открылась ли страница с ноутбуками")
