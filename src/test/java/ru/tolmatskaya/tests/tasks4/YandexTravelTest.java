@@ -24,14 +24,15 @@ public class YandexTravelTest extends BaseTests {
         pageManager.getStartPage()
                 .titleOnThePage()
                 .enterTextIntoInputField("Москва")
-                .selectDate("Июль", "1")
-                .selectDepartureDate("Июль", "7")
+                .selectDate("Июль", "7")
+                .selectDepartureDate("Июль", "10")
                 .findHotel()
                 .titleOnThePage()
                 .addFilters()
                 .selectFoodOption("Завтрак")
                 .selectAccommodationType("Гостиница")
-                .setPriceRange(0, 30000);
+                .setPriceRange(0, 30000)
+                .filterLowToHigh();
     }
 
     @Test

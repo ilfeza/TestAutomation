@@ -30,8 +30,13 @@ public class StartPage extends BasePage {
     @FindBy(xpath = "//span[text()='Авиа']")
     private WebElement aviaButton;
 
+    @FindBy(xpath = "//div[@class='gdpr-popup-v3-button gdpr-popup-v3-button_id_all' and text()='Allow all']")
+    private WebElement cookieButton;
+
     @Step("Проверяем, присутсвует ли заголовок на странице")
     public StartPage titleOnThePage() {
+        //cookieButton.click();
+        clearBrowserCache();
         Assert.assertEquals("На странице отсутствует заголовок", "20 миллионов путешественников каждый месяц бронируют у нас отели, билеты и туры", title.getText().trim());
         logger.info("Нужный заголовок присутствует на странице");
         return pageManager.getStartPage();
@@ -41,7 +46,11 @@ public class StartPage extends BasePage {
     public StartPage enterTextIntoInputField(String text) {
         inputField.clear();
         inputField.sendKeys(text);
-        //кликаем по 1 элементу в списке отелей
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         elementInHotels.click();
         logger.info("Выбран город поездки");
         return pageManager.getStartPage();
@@ -71,7 +80,11 @@ public class StartPage extends BasePage {
         if (month == null) {
             throw new IllegalArgumentException("Неверное имя месяца: " + monthName);
         }
-
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         String dateXpath = String.format("//div[@data-qa='day-%d-%s-%s']", year, month, day);
         WebElement dayElement = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath(dateXpath)));

@@ -53,6 +53,11 @@ public class AviaPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOf(from));
         from.clear();
         from.sendKeys(fromIn);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         elementFrom.click();
         logger.info("Выбран город вылета");
         return pageManager.getAviaPage();
@@ -62,6 +67,11 @@ public class AviaPage extends BasePage {
     public AviaPage toInput(String toIn) {
         to.clear();
         to.sendKeys(toIn);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         elementTo.click();
         logger.info("Выбран город прилета");
         return pageManager.getAviaPage();

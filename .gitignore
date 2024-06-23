@@ -6,3 +6,4 @@ target
 
 # Files ignore
 *.iml
+src/main/resources/logs/automation.log

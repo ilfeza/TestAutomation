@@ -71,5 +71,11 @@ public class BasePage {
         }
     }
 
+    protected void clearBrowserCache() {
+
+        driverManager.getDriver().manage().deleteAllCookies();
+        driverManager.getDriver().navigate().refresh();
+    }
+
 
 }

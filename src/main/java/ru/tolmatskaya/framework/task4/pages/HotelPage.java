@@ -33,6 +33,12 @@ public class HotelPage extends BasePage{
     @FindBy(xpath = "//span[text()='до']/following-sibling::input")
     private WebElement maxPriceInput;
 
+    @FindBy(xpath = "//button[contains(., 'Популярные')]")
+    private WebElement filters;
+
+    @FindBy(xpath = "//button[@type='button' and @data-index='1' and @data-qa='cheap-first-option' and text()='Сначала дешевле']")
+    private WebElement buttonLowToHigh;
+
 
     @Step("Проверяем наличие заголовка на странице")
     public HotelPage titleOnThePage() {
@@ -109,12 +115,52 @@ public class HotelPage extends BasePage{
             String cleanPriceText = priceText.replaceAll("[^0-9]", "");
             if (!cleanPriceText.isEmpty()) {
                 int priceValue = Integer.parseInt(cleanPriceText);
-                System.out.println(priceValue);
+                //System.out.println(priceValue);
                 Assert.assertTrue("Цена не должна быть больше " + maxPrice, priceValue <= maxPrice);
             }
         }
 
+        logger.info("Цены находятся в звдвнном диапазоне");
+
         return this;
     }
+
+    @Step("Проверка фильтрации")
+    public HotelPage filterLowToHigh(){
+
+        waitUntilElementToBeClickable(filters).click();
+        buttonLowToHigh.click();
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        int previousPrice = -1;
+        int count = 0;
+        for (WebElement priceElement : allHotels) {
+            if (count >= 5) {
+                break;
+            }
+            String priceText = priceElement.getText().trim();
+            if (priceText.isEmpty()) {
+                continue;
+            }
+            String cleanPriceText = priceText.replaceAll("[^0-9]", "");
+            if (!cleanPriceText.isEmpty()) {
+                int currentPrice = Integer.parseInt(cleanPriceText);
+                //System.out.println(currentPrice);
+                if (previousPrice != -1) {
+                    Assert.assertTrue("Цены должны идти по возрастанию: " + previousPrice + " <= " + currentPrice, previousPrice <= currentPrice);
+                }
+                previousPrice = currentPrice;
+            }
+            count++;
+        }
+
+        logger.info("Цены идут по возрастанию");
+        return this;
+    }
+
 
 }
