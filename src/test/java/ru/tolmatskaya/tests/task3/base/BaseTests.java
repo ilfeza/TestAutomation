@@ -21,6 +21,11 @@ public class BaseTests {
     public void before(){
         String baseUrl = "https://market.yandex.ru";
         driverManager.getDriver().get(baseUrl);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterClass
