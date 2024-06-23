@@ -2,8 +2,8 @@
 target
 .idea
 .allure
-.logs
 
 # Files ignore
 *.iml
 src/main/resources/logs/automation.log
+src/main/resources/logs
